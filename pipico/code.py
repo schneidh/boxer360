@@ -4,6 +4,10 @@ import usb_cdc
 import time
 import supervisor
 
+#
+# CircuitPython script to receive gamepad events on the USB CDC port
+# and send them as USB HID gamecontroller events to host.
+#
 serial = usb_cdc.data
 gp = Gamepad(usb_hid.devices)
 
