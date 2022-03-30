@@ -17,7 +17,7 @@ XBox 360 Controller -> Raspberry Pi -> M1 Macbook <-> Pi Pico
 
 When you plug the XBox 360 controller into the Raspberry PI, it will show up in evdev,
 which the `boxer_client.py` script reads and forwards to a server socket running on the mac.
-The server socket is provided by socat (see`socat_proxy.sh`) and forwards the events to
+The server socket is provided by socat and forwards the events to
 the USB CDC serial port exposed by the Pi Pico.  Finally, the Pi Pico reads the events from
 the USB CDC serial port and sends game controller HID events to the host mac.  The virtual
 USB HID game controller of the Pi Pico is recognized by Steam and a gamepad testing website
@@ -28,7 +28,7 @@ On the Raspberry Pi, you will need to install the evdev python library and copy 
 
 On the Pi Pico, you will need to install CircuitPython along with Adafruits [CircuitPython HID Library](https://github.com/adafruit/Adafruit_CircuitPython_HID).  Then copy [boot.py](pipico/boot.py), [code.py](pipico/code.py), [hid_gamepad.py](pipico/hid_gamepadboot.py) to the Pi Pico.
 
-On your mac, you will need to run the socat command from (socat_proxy.sh)[socat_proxy.sh].  You may need to change the target USB serial port device.  It will vary depending on which USB port you use.
+On your mac, you will need to run the socat command from [socat_proxy.sh](socat_proxy.sh).  You may need to change the target USB serial port device.  It will vary depending on which USB port you use.
 
 ## Startup
 To start, first plugin your Pi Pico into your mac.  Then start the socat proxy on the mac.  The
