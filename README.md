@@ -28,7 +28,7 @@ On the Raspberry Pi, you will need to install the evdev python library and copy 
 
 On the Pi Pico, you will need to install CircuitPython along with Adafruits [CircuitPython HID Library](https://github.com/adafruit/Adafruit_CircuitPython_HID).  Then copy [boot.py](pipico/boot.py), [code.py](pipico/code.py), [hid_gamepad.py](pipico/hid_gamepadboot.py) to the Pi Pico.
 
-On your mac, you will need to run the socat command from (socat_proxy.sh)[socat_proxy.sh].
+On your mac, you will need to run the socat command from (socat_proxy.sh)[socat_proxy.sh].  You may need to change the target USB serial port device.  It will vary depending on which USB port you use.
 
 ## Startup
 To start, first plugin your Pi Pico into your mac.  Then start the socat proxy on the mac.  The
