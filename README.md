@@ -26,7 +26,7 @@ that I use.  I was also able to get Moonlight QT to recognize it and forward to 
 ## Prerequisites
 On the Raspberry Pi, you will need to install the evdev python library and copy [boxer_client.py](raspberrypi/boxer_client.py) to your Pi.
 
-On the Pi Pico, you will need to install CircuitPython along with Adafruits [CircuitPython HID Library](https://github.com/adafruit/Adafruit_CircuitPython_HID).  Then copy [boot.py](pipico/boot.py), [code.py](pipico/code.py), [hid_gamepad.py](pipico/hid_gamepadboot.py) to the Pi Pico.
+On the Pi Pico, you will need to install CircuitPython along with Adafruits [CircuitPython HID Library](https://github.com/adafruit/Adafruit_CircuitPython_HID).  Then copy [boot.py](pipico/boot.py), [code.py](pipico/code.py), [hid_gamepad.py](pipico/hid_gamepad.py) to the Pi Pico.
 
 On your mac, you will need to run the socat command from [socat_proxy.sh](socat_proxy.sh).  You may need to change the target USB serial port device.  It will vary depending on which USB port you use.
 
