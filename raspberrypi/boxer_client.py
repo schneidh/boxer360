@@ -35,7 +35,7 @@ button_lookup = dict([
   (705, 3), # dpad left button
   (704, 4), # dpad right button
   (314, 5), # back button
-  (325, 6), # start button
+  (315, 6), # start button
   (307, 7), # x button
   (308, 8), # y button
   (305, 9), # b button
