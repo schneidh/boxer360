@@ -14,10 +14,10 @@ gp = Gamepad(usb_hid.devices)
 # Axis value tracking vars
 x = 0
 y = 0
-z = 0
-rz = 0
 rx = 0
 ry = 0
+z = 0
+rz = 0
 dirty = False
 while True:
     start = supervisor.ticks_ms()
@@ -31,26 +31,26 @@ while True:
                     gp.press_buttons(button)
                 elif (state == 0):
                     gp.release_buttons(button)
-            elif (button == 23):
-                x = -(127 - serial.read()[0])
-                dirty = True
-            elif (button == 24):
-                y = -(127 - serial.read()[0])
-                dirty = True
             elif (button == 20):
-                z = -(127 - serial.read()[0])
+                x = serial.read()[0]
                 dirty = True
             elif (button == 21):
-                rz = -(127 - serial.read()[0])
+                y = serial.read()[0]
                 dirty = True
             elif (button == 22):
-                rx = -(127 - serial.read()[0])
+                rx = serial.read()[0]
+                dirty = True
+            elif (button == 23):
+                ry = serial.read()[0]
+                dirty = True
+            elif (button == 24):
+                z = serial.read()[0]
                 dirty = True
             elif (button == 25):
-                ry = -(127 - serial.read()[0])
+                rz = serial.read()[0]
                 dirty = True
     if dirty:
-        gp.move_joysticks(x, y, z, rz, rx, ry)
+        gp.move_joysticks(x, y, rx, ry, z, rz)
         dirty = False
     # sleep for the time remaining of the 0.02 second tick
     # this prevents the axis events from flooding the host
