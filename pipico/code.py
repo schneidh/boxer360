@@ -32,22 +32,28 @@ while True:
                 elif (state == 0):
                     gp.release_buttons(button)
             elif (button == 20):
+                # left x
                 x = serial.read()[0] - 127
                 dirty = True
             elif (button == 21):
+                # left y
                 y = serial.read()[0] - 127
                 dirty = True
             elif (button == 22):
-                z = serial.read()[0] - 127
-                dirty = True
-            elif (button == 23):
+                # left trigger
                 rx = serial.read()[0] - 127
                 dirty = True
+            elif (button == 23):
+                # right x
+                z = serial.read()[0] - 127
+                dirty = True
             elif (button == 24):
-                ry = serial.read()[0] - 127
+                # right y
+                rz = serial.read()[0] - 127
                 dirty = True
             elif (button == 25):
-                rz = serial.read()[0] - 127
+                # right trigger
+                ry = serial.read()[0] - 127
                 dirty = True
     if dirty:
         gp.move_joysticks(x, y, z, rx, ry, rz)

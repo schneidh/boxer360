@@ -30,36 +30,39 @@ while device is None:
         time.sleep(10)
 
 button_lookup = dict([
-  (315, 1), # start button
-  (314, 2), # back button
-  (304, 3), # a button
-  (305, 4), # b button
-  (307, 5), # x button
-  (308, 6), # y button
-  (706, 7), # dpad up button
-  (707, 8), # dpad down button
-  (704, 9), # dpad left button
-  (705, 10), # dpad right button
-  (310, 11), # left shoulder button
-  (311, 12), # right shoulder button
-  (317, 13), # left stick button
-  (318, 14) # right stick button
+  (304, 1), # a button
+  (305, 2), # b button
+  # 306 = c button - not mapped
+  (307, 4), # x button
+  (308, 5), # y button
+  # 309 = z button - not mapped
+  (310, 7), # left shoulder button
+  (311, 8), # right shoulder button
+  # button 9 = left trigger - skipped mapped as axis
+  # button 10 = right trigger - skipped mapped as axis
+  (314, 11), # back button
+  (315, 12), # start button
+  (316, 13), # xbox button
+  (317, 14), # left stick button
+  (318, 15), # right stick button
 ])
 
 axis_lookup = dict([
-    (3, 20), # left stick x axis
-    (4, 21), # left stick y axis
-    (0, 22), # right stick x axis
-    (1, 23), # right stick y axis
-    (2, 24), # left trigger
-    (5, 25), # right trigger
+    (0, 20), # right stick x axis
+    (1, 21), # right stick y axis
+    (2, 22), # right trigger
+    (3, 23), # left stick x axis
+    (4, 24), # left stick y axis
+    (5, 25), # left trigger
 ])
-
+# ABS code 16 hat0x -> -1 , 0 , 1
+# ABS code 17 hat0y -> -1,  0, 1
 frame = bytearray(3)
 
+running = True
 try:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        while True:
+        while running:
             try:
                 s.connect((host, port))
                 for event in device.read_loop():
@@ -76,10 +79,19 @@ try:
                             frame[2] = min(int(event.value / 256 + 128), 254)
                         elif event.code == 2 or event.code == 5:
                             frame[2] = min(int(event.value), 254)
+                        elif event.code == 16 or event.code == 17:
+                            frame[2] = int(event.value)
                         s.sendall(frame)
             except ConnectionRefusedError:
                 print("Connection refused for", host, "port", port)
                 time.sleep(10)
+            except OSError:
+                print("Lost connection to evdev device...")
+                running = False
+                s.shutdown(socket.SHUT_RDWR)
+                device.close()
 except KeyboardInterrupt:
     device.close()
-    print("Exiting...")
+
+print("Exiting...")
+sys.exit(0)

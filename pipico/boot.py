@@ -32,6 +32,14 @@ GAMEPAD_REPORT_DESCRIPTOR = bytes((
     0xC0,        # End Collection
 ))
 
+	# 0x05, 0x01,	 #   Usage Page (Generic Desktop Ctrls, Left and Right Sticks)
+	# 0x09, 0x39,	 #   Usage (Hat switch)
+	# 0x15, 0x00,	 #   Logical Minimum (0)
+	# 0x25, 0x07,	 #   Logical Maximum (7)
+	# 0x95, 0x01,	 #   Report Count (1)
+	# 0x75, 0x04,	 #   Report Size (4)
+	# 0x81, 0x02,	 #   Input (Data,Var,Abs,No Wrap,Linear,Preferred State,No Null Position)
+
 gamepad = usb_hid.Device(
     report_descriptor=GAMEPAD_REPORT_DESCRIPTOR,
     usage_page=0x01,           # Generic Desktop Control
