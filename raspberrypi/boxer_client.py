@@ -32,19 +32,18 @@ while device is None:
 button_lookup = dict([
   (304, 1), # a button
   (305, 2), # b button
-  # 306 = c button - not mapped
-  (307, 4), # x button
-  (308, 5), # y button
-  # 309 = z button - not mapped
-  (310, 7), # left shoulder button
-  (311, 8), # right shoulder button
-  # button 9 = left trigger - skipped mapped as axis
-  # button 10 = right trigger - skipped mapped as axis
-  (314, 11), # back button
-  (315, 12), # start button
-  (316, 13), # xbox button
-  (317, 14), # left stick button
-  (318, 15), # right stick button
+  (307, 3), # x button
+  (308, 4), # y button
+  (310, 5), # left shoulder button
+  (311, 6), # right shoulder button
+  (317, 7), # left stick button
+  (318, 8), # right stick button
+  (314, 9), # select button
+  (315, 10), # start button
+  (706, 12), # dpad up button
+  (707, 13), # dpad down button
+  (704, 14), # dpad left button
+  (705, 15), # dpad right button
 ])
 
 axis_lookup = dict([
@@ -55,8 +54,6 @@ axis_lookup = dict([
     (4, 24), # left stick y axis
     (5, 25), # left trigger
 ])
-# ABS code 16 hat0x -> -1 , 0 , 1
-# ABS code 17 hat0y -> -1,  0, 1
 frame = bytearray(3)
 
 running = True
@@ -71,7 +68,7 @@ try:
                         frame[1] = button_lookup[event.code]
                         frame[2] = event.value
                         s.sendall(frame)
-                    elif event.type == evdev.ecodes.EV_ABS and 0 <= event.code <= 5 :
+                    elif event.type == evdev.ecodes.EV_ABS and event.code in axis_lookup:
                         frame[0] = 255
                         frame[1] = axis_lookup[event.code]
                         if event.code == 0 or event.code == 1 or event.code == 3 or event.code == 4:
@@ -79,8 +76,6 @@ try:
                             frame[2] = min(int(event.value / 256 + 128), 254)
                         elif event.code == 2 or event.code == 5:
                             frame[2] = min(int(event.value), 254)
-                        elif event.code == 16 or event.code == 17:
-                            frame[2] = int(event.value)
                         s.sendall(frame)
             except ConnectionRefusedError:
                 print("Connection refused for", host, "port", port)

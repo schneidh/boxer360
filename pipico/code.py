@@ -18,14 +18,14 @@ z = 0
 rx = 0
 ry = 0
 rz = 0
-dirty = False
+update_axis = False
 while True:
     start = supervisor.ticks_ms()
     while serial.in_waiting > 0:
         pre = serial.read()[0]
         if (pre == 255):
             button = serial.read()[0]
-            if (button <= 16):
+            if (1 <= button <= 16):
                 state = serial.read()[0]
                 if (state == 1):
                     gp.press_buttons(button)
@@ -34,30 +34,30 @@ while True:
             elif (button == 20):
                 # left x
                 x = serial.read()[0] - 127
-                dirty = True
+                update_axis = True
             elif (button == 21):
                 # left y
                 y = serial.read()[0] - 127
-                dirty = True
+                update_axis = True
             elif (button == 22):
                 # left trigger
                 rx = serial.read()[0] - 127
-                dirty = True
+                update_axis = True
             elif (button == 23):
                 # right x
                 z = serial.read()[0] - 127
-                dirty = True
+                update_axis = True
             elif (button == 24):
                 # right y
                 rz = serial.read()[0] - 127
-                dirty = True
+                update_axis = True
             elif (button == 25):
                 # right trigger
                 ry = serial.read()[0] - 127
-                dirty = True
-    if dirty:
+                update_axis = True
+    if update_axis:
         gp.move_joysticks(x, y, z, rx, ry, rz)
-        dirty = False
+        update_axis = False
     # sleep for the time remaining of the 0.02 second tick
     # this prevents the axis events from flooding the host
     tick_remaining = supervisor.ticks_ms() - start

@@ -3,7 +3,7 @@
 ====================================================
 
 * Author: Dan Halbert
-* Author: Tom Schneider, Added r_x and r_y axises
+* Author: Tom Schneider, Added r_x, r_y and D-pad
 """
 
 import struct
@@ -41,11 +41,11 @@ class Gamepad:
         # report[5] joystick 1 y: 0 to 255
         # report[6] trigger 0: 0 to 255
         # report[7] trigger 1: 0 to 255
-        self._report = bytearray(8)
+        self._report = bytearray(9)
 
         # Remember the last report as well, so we can avoid sending
         # duplicate reports.
-        self._last_report = bytearray(8)
+        self._last_report = bytearray(9)
 
         # Store settings separately before putting into report. Saves code
         # especially for buttons.
@@ -53,9 +53,10 @@ class Gamepad:
         self._joy_x = 0
         self._joy_y = 0
         self._joy_z = 0
+        self._joy_r_z = 0
         self._joy_r_x = 0
         self._joy_r_y = 0
-        self._joy_r_z = 0
+        self._hat_state = 0
 
         # Send an initial report to test if HID device is ready.
         # If not, wait a bit and try once more.
@@ -88,7 +89,7 @@ class Gamepad:
         self.press_buttons(*buttons)
         self.release_buttons(*buttons)
 
-    def move_joysticks(self, x=None, y=None, r_x=None, r_y=None, z=None, r_z=None):
+    def move_joysticks(self, x=None, y=None, z=None, r_z=None, r_x=None, r_y=None):
         """Set and send the given joystick values.
         The joysticks will remain set with the given values until changed
 
@@ -112,12 +113,17 @@ class Gamepad:
             self._joy_y = self._validate_joystick_value(y)
         if z is not None:
             self._joy_z = self._validate_joystick_value(z)
+        if r_z is not None:
+            self._joy_r_z = self._validate_joystick_value(r_z)
         if r_x is not None:
             self._joy_r_x = self._validate_joystick_value(r_x)
         if r_y is not None:
             self._joy_r_y = self._validate_joystick_value(r_y)
-        if r_z is not None:
-            self._joy_r_z = self._validate_joystick_value(r_z)
+        self._send()
+
+    def move_hat(self, hat=None):
+        if hat is not None:
+            self._hat_state = hat
         self._send()
 
     def reset_all(self):
@@ -126,9 +132,10 @@ class Gamepad:
         self._joy_x = 0
         self._joy_y = 0
         self._joy_z = 0
+        self._joy_r_z = 0
         self._joy_r_x = 0
         self._joy_r_y = 0
-        self._joy_r_z = 0
+        self._hat_state = 0
         self._send(always=True)
 
     def _send(self, always=False):
@@ -136,16 +143,17 @@ class Gamepad:
         If ``always`` is ``False`` (the default), send only if there have been changes.
         """
         struct.pack_into(
-            "<Hbbbbbb",
+            "<HbbbbbbB",
             self._report,
             0,
             self._buttons_state,
             self._joy_x,
             self._joy_y,
             self._joy_z,
+            self._joy_r_z,
             self._joy_r_x,
             self._joy_r_y,
-            self._joy_r_z
+            self._hat_state
         )
 
         if always or self._last_report != self._report:
