@@ -28,7 +28,7 @@ left_stick_map = (Keycode.W, Keycode.S, Keycode.A, Keycode.D)
 
 def toMouseMove(raw):
     if raw < -90 or raw > 90:
-        return raw // 10
+        return raw // 8
     return raw // 16
 
 def mk_mode():
