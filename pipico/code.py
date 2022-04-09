@@ -37,7 +37,7 @@ def mk_mode():
         pre = serial.read()[0]
         if (pre == 255):
             button = serial.read()[0]
-            if 1 <= button <= 15 or button == 254:
+            if 1 <= button <= 15:
                 state = serial.read()[0]
                 if (state == 0):
                     keyboard.release(button_map[button - 1])
