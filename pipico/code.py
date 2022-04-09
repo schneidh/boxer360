@@ -17,22 +17,22 @@ tick_duration = 0.01
 
 mx = 0
 my = 0
+leftx = None
+lefty = None
 button_map = (
     Keycode.SPACE, Keycode.E, Keycode.SPACE, Keycode.SPACE, # a, b, x, y
     Keycode.SPACE, Keycode.SHIFT, Keycode.SPACE, Keycode.SHIFT, # left/right shoulder
     Keycode.SPACE, Keycode.E, Keycode.SPACE, # select, start, blank
-    Keycode.UP_ARROW, Keycode.DOWN_ARROW, Keycode.LEFT_ARROW, Keycode.RIGHT_ARROW) # d-pad
+    Keycode.W, Keycode.S, Keycode.LEFT_ARROW, Keycode.RIGHT_ARROW) # d-pad
 left_stick_map = (Keycode.W, Keycode.S, Keycode.A, Keycode.D)
 
 def toMouseMove(raw):
-    if -95 > raw > 95:
-        return raw // 6
-    elif -45 >  raw > 45:
-        return raw // 12
+    if raw < -90 or raw > 90:
+        return raw // 10
     return raw // 16
 
 def mk_mode():
-    global mx, my, mode
+    global mx, my, leftx, lefty
     while serial.in_waiting > 0:
         pre = serial.read()[0]
         if (pre == 255):
@@ -44,23 +44,35 @@ def mk_mode():
                 elif (state == 1):
                     keyboard.press(button_map[button - 1])
             elif button == 20:
+                previous_leftx = leftx
                 value = serial.read()[0] - 127
-                if value > 95:
-                    keyboard.press(left_stick_map[3])
-                elif value < -95:
-                    keyboard.press(left_stick_map[2])
+                if value > 65:
+                    leftx = left_stick_map[3]
+                    keyboard.press()
+                elif value < -65:
+                    leftx = left_stick_map[2]
                 else:
-                    keyboard.release(left_stick_map[3])
-                    keyboard.release(left_stick_map[2])
+                    leftx = None
+                if previous_leftx != leftx:
+                    if leftx is None:
+                        keyboard.release(previous_leftx)
+                    else:
+                        keyboard.press(leftx)
             elif button == 21:
+                previous_lefty = lefty
                 value = serial.read()[0] - 127
-                if value > 95:
-                    keyboard.press(left_stick_map[1])
-                elif value < -95:
-                    keyboard.press(left_stick_map[0])
+                if value > 65:
+                    lefty = left_stick_map[1]
+                    keyboard.press()
+                elif value < -65:
+                    lefty = left_stick_map[0]
                 else:
-                    keyboard.release(left_stick_map[1])
-                    keyboard.release(left_stick_map[0])
+                    lefty = None
+                if previous_lefty != lefty:
+                    if lefty is None:
+                        keyboard.release(previous_lefty)
+                    else:
+                        keyboard.press(lefty)
             elif button == 22:
                 value = serial.read()[0] - 127
                 if value > 0:
