@@ -142,9 +142,9 @@ class Gamepad:
             self._buttons_state,
             self._joy_x,
             self._joy_y,
+            self._joy_r_y,
             self._joy_z,
             self._joy_r_x,
-            self._joy_r_y,
             self._joy_r_z
         )
 

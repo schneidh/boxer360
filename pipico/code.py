@@ -19,6 +19,12 @@ rx = 0
 ry = 0
 rz = 0
 dirty = False
+
+# whether to emulate buttons for left/right trigger
+emulateTriggerButtons = True
+leftTriggerButton = 7
+rightTriggerButton = 8
+
 while True:
     start = supervisor.ticks_ms()
     while serial.in_waiting > 0:
@@ -38,8 +44,14 @@ while True:
                 y = serial.read()[0] - 127
                 dirty = True
             elif (button == 22):
-                z = serial.read()[0] - 127
-                dirty = True
+                value = serial.read()[0] - 127
+                if (emulateTriggerButtons and value > 0):
+                    gp.press_buttons(leftTriggerButton)
+                elif (emulateTriggerButtons and value <= 0):
+                    gp.release_buttons(leftTriggerButton)
+                else:
+                    z = value
+                    dirty = True
             elif (button == 23):
                 rx = serial.read()[0] - 127
                 dirty = True
@@ -47,8 +59,14 @@ while True:
                 ry = serial.read()[0] - 127
                 dirty = True
             elif (button == 25):
-                rz = serial.read()[0] - 127
-                dirty = True
+                value = serial.read()[0] - 127
+                if (emulateTriggerButtons and value > 0):
+                    gp.press_buttons(rightTriggerButton)
+                elif (emulateTriggerButtons and value <= 0):
+                    gp.release_buttons(rightTriggerButton)
+                else:
+                    rz = value
+                    dirty = True
     if dirty:
         gp.move_joysticks(x, y, z, rx, ry, rz)
         dirty = False
@@ -56,3 +74,4 @@ while True:
     # this prevents the axis events from flooding the host
     tick_remaining = supervisor.ticks_ms() - start
     time.sleep(0.02 - min(0.02, tick_remaining / 1000.0));
+

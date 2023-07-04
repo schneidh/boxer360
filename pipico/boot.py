@@ -1,6 +1,11 @@
 import usb_hid
 import usb_cdc
 
+GAMEPAD_MODE = 1
+KB_MOUSE_MODE = 2
+# mode is either GAMEPAD_MODE or KB_MOUSE_MODE
+mode = GAMEPAD_MODE
+
 #
 # CircuitPython boot script to enable USB HID gamecontroller support.
 #
@@ -42,4 +47,7 @@ gamepad = usb_hid.Device(
 )
 
 usb_cdc.enable(console=True, data=True)
-usb_hid.enable((gamepad,))
+if mode == GAMEPAD_MODE:
+  usb_hid.enable((gamepad,))
+else:
+  usb_hid.enable((usb_hid.Device.MOUSE, usb_hid.Device.KEYBOARD,))
