@@ -44,17 +44,17 @@ axis_lookup = dict([
 frame = bytearray(3)
 
 def findController():
-    device = None
-    while device is None:
+    found_device = None
+    while found_device is None:
         devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
         for device in devices:
             if "Xbox 360" in device.name:
-                device = evdev.InputDevice(device.path)
+                found_device = evdev.InputDevice(device.path)
                 print("Found device", device.name, device.path)
-        if device is None:
+        if found_device is None:
             print("No game controller device found...")
             time.sleep(10)
-    return device
+    return found_device
 
 
 running = True
