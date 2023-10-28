@@ -33,3 +33,7 @@ On your mac, you will need to run the socat command from [socat_proxy.sh](socat_
 To start, first plugin your Pi Pico into your mac.  Then
 run `boxer_server.py` on the Raspberry pi.   Then update the raspberrypi_host in `socat_proxy.sh` and start the socat proxy on the mac. If everything
 works, you should see the controller show up in a web browser if you visit [https://gamepad-tester.com/](https://gamepad-tester.com/).
+
+## Geforce Now
+Geforce Now requires that controllers use the `standard` mapping.  The browser determines this mapping by using the vendor and device id.  To work around this issue, execute the following in the browsers Developer Tools -> Console:
+```javascript:gg = navigator.getGamepads; navigator.getGamepads = function(){ g = gg.apply(navigator); if (g[0] !== null) { g0 = {}; for(var property in g[0]){g0[property] = g[0][property]}; g0.mapping="standard"; return [g0, null, null, null]}; return g; }```
